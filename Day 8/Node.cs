@@ -10,5 +10,10 @@
         public string Identifier { get; set; }
         public Node? LeftNode { get; set; }
         public Node? RightNode { get; set; }
+
+        public override string ToString()
+        {
+            return Identifier;
+        }
     }
 }

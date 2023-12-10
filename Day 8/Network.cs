@@ -30,25 +30,38 @@
             }
 
             StartNode = nodes["AAA"];
+            StartNodes = nodes.Where(x => x.Key[2] == 'A').Select(x => x.Value).ToList();
         }
 
         public Node StartNode { get; private set; }
+        public List<Node> StartNodes { get; private set; }
 
-        public long StepsToEnd(Step[] steps)
+        public long StepsToEnd(Step[] steps, Func<string, bool> identifierEndCondition, Node? startNode = null)
         {
-            Node node = StartNode;
+            if (startNode is null)
+                startNode = StartNode;
 
-            long stepCount = 0; 
-            while (node.Identifier != "ZZZ")
+            Node node = startNode;
+
+            long stepCount = 0;
+            while (identifierEndCondition(node.Identifier))
             {
                 Step step = steps[stepCount++ % steps.Length];
                 if (step == Step.Left)
                     node = node.LeftNode ?? throw new NullReferenceException("Left child was not initialized.");
                 else
-                    node = node.RightNode ?? throw new NullReferenceException("Left child was not initialized.");
+                    node = node.RightNode ?? throw new NullReferenceException("Right child was not initialized.");
             }
 
             return stepCount;
+        }
+
+        public long StepsToEndMultiPath(Step[] steps)
+        {
+            Node[] nodes = StartNodes.ToArray();
+
+            IEnumerable<long> stepsToZ = nodes.Select(x => StepsToEnd(steps, y => y[2] != 'Z', x));
+            return LeastCommonMultiple.GetLCM(stepsToZ);
         }
     }
 }
