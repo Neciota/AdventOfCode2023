@@ -5,3 +5,6 @@ long[][] serieses = input.Select(x => x.Split(' ').Select(y => Convert.ToInt64(y
 
 long result = serieses.Select(SeriesAnalyzer.GetNextValue).Sum();
 Console.WriteLine(result);
+
+long result2 = serieses.Select(SeriesAnalyzer.GetPreviousValue).Sum();
+Console.WriteLine(result2);
